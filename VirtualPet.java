@@ -1,6 +1,6 @@
 /*
 	Text based Tamagotchi
-	By Emmanuel Adefuye 03/20/2019
+	By Emad Salim 03/21/2021
 */
 import java.util.Scanner;
 public class VirtualPet
