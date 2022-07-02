@@ -15,6 +15,6 @@
     9 11 6 7 19 4 1 6 18 4
 ### `Sample Output`
     17
-### `Contributor:` [Rishabh606](https://github.com/Rishabh606) 
+### `Contributor:` Emad Salim
 #### Source: 
     https://www.pepcoding.com/
