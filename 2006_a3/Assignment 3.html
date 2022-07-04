@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <script language="javascript" src="/content/enforced/310564-92895.201803/ASSIGNMENTS/js/prettify.js"></script>
+      <script language="javascript" src="/content/enforced/310564-92895.201803/ASSIGNMENTS/js/solutions.js"></script>
+      <link rel="stylesheet" type="text/css" href="/content/enforced/310564-92895.201803/ASSIGNMENTS/css/assigns.css">
+      <link rel="stylesheet" type="text/css" href="/content/enforced/310564-92895.201803/ASSIGNMENTS/css/prettify.css">
+      <title> Computer Science 2510 - Assignment 1</title>
+</head>
+
+<body onload="prettyPrint()">
+<div id="masthead"><img style="border: 2px solid #FFFFFF;" src="/content/enforced/310564-92895.201803/ASSIGNMENTS/images/MUN-Logo-RGB-small.jpg"> Computer Science 2006</div>
+<div id="submasthead">Assignment 3</div>
+<h3 style="text-align: center;">Due Monday March 28th 2022, 11:59pm</h3>
+<p style="text-align: center;"><strong><span style="color: #38761d;">This assignment has 20 marks in total</span></strong></p>
+<p>This assignment is an exercise that will let you see how simple logic can be coded on a remote server and accessed by a standard client. &nbsp;It is not completely realistic - for example, we don't implement any security when entering and sending usernames and passwords, but it's a good basis from which you can build networked behaviour into your programs, and will help you understand how to build server code that can work with a very general (and unmodifiable) client.</p>
+<p><strong><span style="color: #38761d;">It is highly recommended</span></strong> that before you start that you download, compile and run the <strong><span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;">bettersockets</span></strong> java code found <a href="/d2l/common/dialogs/quickLink/quickLink.d2l?ou=450712&amp;type=content&amp;rcode=mun-1660173" target="_self">here</a>&nbsp;(link to downloadable .zip file).</p>
+<p><span style="color: #38761d;"><strong>You are allowed</strong></span> to use the code in the&nbsp;<span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;"><strong>BetterServer.java</strong></span> class as the basis for your solution.</p>
+<p></p>
+<div id="readings">
+<h2>A simple puzzle game using Sockets: WordNet</h2>
+<p><span style="text-decoration: underline; font-size: 12pt;"><strong>Scenario</strong></span></p>
+<p>Write a server program in java that allows a basic client to connect to the server using sockets. &nbsp;Once connected the server will invite the client to play a game of guess-the-word. The mystery word is always&nbsp;<strong>TOPPLE</strong>. In this game the server asks the client to enter a guess.&nbsp;Each time that the user makes a guess the client sends it to the server and the server replies by showing them which letters are correct and which are not (see below).</p>
+<p>When the client first connects, the server sends the greeting:</p>
+<p style="padding-left: 40px;"><span style="font-size: 12pt; color: #085394;"><strong><span style="font-family: 'courier new', courier, sans-serif;"><span style="color: #085394; font-family: 'courier new', courier, sans-serif;"><span style="caret-color: #085394;">Welcome&nbsp;to Wordnet!</span></span></span></strong></span></p>
+<p>The server then asks for username, then password to be submitted separately. &nbsp;The user is given 5 attempts in total to get these right. &nbsp;If they fail on the 5th attempt then the server disconnects from the client.</p>
+<p>The username must be <span style="font-family: 'courier new', courier, sans-serif;"><strong><span style="color: #085394;">Sammy</span></strong></span> (first letter uppercase, remainder lowercase) and the password must be <span style="font-family: 'courier new', courier, sans-serif; color: #085394;"><strong>WOOF</strong></span> (all uppercase).</p>
+<p>If both the username and password are correctly submitted then the server sends this welcome message to the client:</p>
+<p style="padding-left: 40px;"><span style="font-size: 12pt; color: #085394;"><strong><span style="font-family: 'courier new', courier, sans-serif;"><span style="color: #085394; font-family: courier new, courier, sans-serif;"><span style="caret-color: #085394;"><span style="color: #085394; font-family: courier new, courier, sans-serif; font-size: medium;"><span style="caret-color: #085394;">Welcome Sammy!</span></span><br><span style="color: #085394; font-family: courier new, courier, sans-serif; font-size: medium;"><span style="caret-color: #085394;">Guess&nbsp;</span></span><span style="color: #085394; font-family: courier new, courier, sans-serif;"><span style="caret-color: #085394;">the</span></span><span style="color: #085394; font-family: courier new, courier, sans-serif; font-size: medium;"><span style="caret-color: #085394;">&nbsp;mystery six-letter word</span></span></span></span></span></strong></span></p>
+<p>The user should then enter a word, for example:</p>
+<p style="padding-left: 40px;"><span style="font-size: 12pt; color: #085394;"><strong><span style="font-family: 'courier new', courier, sans-serif;"><span style="color: #085394; font-family: 'courier new', courier, sans-serif;"><span style="caret-color: #085394;">JOSTLE</span></span></span></strong></span></p>
+<p>The server receives the word, checks for match to the correct word 'TOPPLE' and sends back:</p>
+<p style="padding-left: 40px;"><span style="font-size: 12pt; color: #085394;"><strong><span style="font-family: 'courier new', courier, sans-serif;"><span style="color: #085394; font-family: 'courier new', courier, sans-serif;"><span style="caret-color: #085394;">*O**LE</span></span></span></strong></span></p>
+<p>This lets the user know that the letters o, l and e were correct <em>and</em> in the correct places. It does not matter if the user enters upper or lower cases letters. So if the user entered <strong><span style="color: #085394; font-family: 'courier new', courier, sans-serif;">jostle</span></strong> then they would get the same response&nbsp;<span style="font-size: 12pt; color: #085394;"><strong><span style="font-family: 'courier new', courier, sans-serif;"><span style="color: #085394; font-family: 'courier new', courier, sans-serif;"><span style="caret-color: #085394;">*O**LE</span></span></span></strong></span>.</p>
+<p>If the input is not correctly formatted, such as having too few or too many letters, using spaces or using non-alphabetical characters then the server should send a response that lets the user know:</p>
+<p style="padding-left: 40px;"><span style="font-size: 12pt; color: #085394;"><strong><span style="font-family: 'courier new', courier, sans-serif;"><span style="color: #085394; font-family: 'courier new', courier, sans-serif;"><span style="caret-color: #085394;"><span style="color: #085394; font-family: courier new, courier, sans-serif; font-size: medium;"><span style="caret-color: #085394;">Oops! You need enter a six letter word containing only alphabetical characters and no spaces.</span></span><br><span style="color: #085394; font-family: courier new, courier, sans-serif; font-size: medium;"><span style="caret-color: #085394;">Try again:</span></span></span></span></span></strong></span></p>
+<p>The server should keep accepting guesses until the user guesses correctly, and keep count of the number of turns. If the user guessed correctly in 5 turns then the server should send this response:</p>
+<p style="padding-left: 40px;"><span style="font-size: 12pt; color: #085394;"><strong><span style="font-family: 'courier new', courier, sans-serif;"><span style="color: #085394; font-family: 'courier new', courier, sans-serif;"><span style="caret-color: #085394;">You got it in 5 turns - well done and goodbye!</span></span></span></strong></span></p>
+<p style="text-align: left;"><strong><span style="color: #38761d; font-size: 12pt;"><a href="/d2l/common/dialogs/quickLink/quickLink.d2l?ou=450712&amp;type=content&amp;rcode=mun-2802624" target="_self">CLICK HERE TO VIEW A SHORT VIDEO DEMO OF HOW THE PROGRAM SHOULD WORK</a></span></strong></p>
+<p style="text-align: left;"><span style="color: #38761d; font-size: 12pt;">&nbsp;</span></p>
+<p><span style="text-decoration: underline; font-size: 12pt;"><strong>Requirements:</strong></span><strong>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span style="color: #38761d;">READ CAREFULLY!</span></strong></p>
+<ul>
+<li>
+<p><span style="text-decoration: underline;">All</span> user input must be done through the client.</p>
+</li>
+<li>The server must send messages to the client. You must assume that the user cannot see any console output of the Server class.
+<ul>
+<li>(If you want to output text to the server's console, like I did, for debugging, that's up to you, but it won't be graded.)</li>
+</ul>
+</li>
+<li>
+<p>When the client connects to the server, the server must greet them with the message:&nbsp;<strong><span style="color: #085394; font-family: 'courier new', courier, sans-serif; font-size: 12pt;">Greetings from WordNet!</span></strong></p>
+</li>
+<li>
+<p>The username must be <strong><span style="color: #085394; font-family: 'courier new', courier, sans-serif; font-size: 12pt;">Sammy</span></strong> (note the capital letter).</p>
+</li>
+<li>
+<p>The password must be <span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;"><strong><span style="color: #085394;">WOOF</span></strong></span>&nbsp;(note that it is all upper case).</p>
+</li>
+<li>The mystery word must be <span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;"><strong><span style="color: #085394;">TOPPLE</span></strong></span>.</li>
+<li>
+<p>You are required to submit a <span style="text-decoration: underline;">single</span> class named <strong><span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;">Server.java</span></strong>, and it must contain <span style="text-decoration: underline;">all</span> your code, including the <span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;"><strong>main</strong></span> method. &nbsp;<span style="color: #cf2a27;">Any other classes or classnames will be ignored and not used for marking, so be <span style="text-decoration: underline;">very</span> careful with the spelling of the classname.</span></p>
+</li>
+<li>
+<p>Your class must work with&nbsp;the&nbsp;<span style="text-decoration: underline;">unmodified</span> <span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;"><strong>BetterClient.java</strong></span> class, found in <a href="/d2l/common/dialogs/quickLink/quickLink.d2l?ou=450712&amp;type=content&amp;rcode=mun-1660173" target="_self">here</a>.&nbsp;&nbsp;<span style="color: #cf2a27;">Do not attempt to submit a modified version of this client class, or any other client code!</span> &nbsp;It will not be used for marking.</p>
+<ul>
+<li>So only submit <strong><span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;">Server.java</span></strong>!</li>
+</ul>
+</li>
+<li>
+<p>If your code does not compile and run, then it will score zero. &nbsp;So test it by compiling and running it using Terminal/Command Prompt/Console.</p>
+</li>
+</ul>
+<p></p>
+<p><span style="text-decoration: underline; font-size: 12pt;"><strong>Grading:</strong></span><strong>&nbsp;</strong></p>
+<p>The code is being judged only on how it runs, and will be graded as follows:</p>
+<table width="491" height="121" style="width: 815px; height: 182px;">
+<tbody>
+<tr style="height: 20px;">
+<td style="width: 129.734375px; height: 20px;"><span style="color: #085394; font-size: 12pt;"><strong>Mark</strong></span></td>
+<td style="width: 669.28125px; height: 20px;"><span style="color: #085394; font-size: 12pt;"><strong>Observed Behaviour When Run</strong></span></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 129.734375px; height: 18px;">1</td>
+<td style="width: 669.28125px; height: 18px;">sends the required greeting: "Greetings from WordNet!"</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 129.734375px; height: 18px;">2</td>
+<td style="width: 669.28125px; height: 18px;">asks for username at least once</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 129.734375px; height: 18px;">2</td>
+<td style="width: 669.28125px; height: 18px;">asks for password at least once</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 129.734375px; height: 18px;">2</td>
+<td style="width: 669.28125px; height: 18px;">tells the user if the username entered is incorrect</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 129.734375px; height: 18px;">2</td>
+<td style="width: 669.28125px; height: 18px;">tells the user if the password entered is incorrect</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 129.734375px; height: 18px;">1</td>
+<td style="width: 669.28125px; height: 18px;">allows a maximum of 5 attempts in total to enter the correct credentials</td>
+</tr>
+<tr>
+<td style="width: 129.734375px;">1</td>
+<td style="width: 669.28125px;">server disconnects if the user fails after 5 attempts</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 129.734375px; height: 18px;">1</td>
+<td style="width: 669.28125px; height: 18px;">sends the welcome message if the user enters the correct username and password</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 129.734375px; height: 18px;">3</td>
+<td style="width: 669.28125px; height: 18px;">correctly informs the user of which letters are correct, in the way shown above</td>
+</tr>
+<tr>
+<td style="width: 129.734375px;">1</td>
+<td style="width: 669.28125px;">correctly informs the user when the word (topple) has been guessed</td>
+</tr>
+<tr>
+<td style="width: 129.734375px;">1</td>
+<td style="width: 669.28125px;">correctly informs the user how many turns they took to guess it</td>
+</tr>
+<tr>
+<td style="width: 129.734375px;">2</td>
+<td style="width: 669.28125px;">informs the user if the input is not correctly formatted</td>
+</tr>
+<tr>
+<td style="width: 129.734375px;">1</td>
+<td style="width: 669.28125px;">allows the user to keep guessing until they guess correctly or decide to exit</td>
+</tr>
+<tr>
+<td style="width: 129.734375px;"><strong>Total = 20</strong></td>
+<td style="width: 669.28125px;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong><span style="font-size: 12pt; color: #38761d;"></span></strong></p>
+<p><span style="text-decoration: underline;"><strong><span style="font-size: 12pt; color: #38761d; text-decoration: underline;">Advice:</span></strong></span></p>
+<p>Remember that after receiving an initial greeting message from the server, the <span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;"><strong>BetterClient.java</strong></span> class&nbsp;<em>always</em> cycles through these three stages in this order:</p>
+<ol>
+<li>get user input</li>
+<li>send user input as message to server</li>
+<li>get reply from server</li>
+</ol>
+<p>So don't forget that when you're trying to make sure that everything stays in step!</p>
+</div>
+<hr>
+<div id="submit">
+<h2>Submission Information</h2>
+<p>Please submit a single java program named <strong><span style="font-family: 'courier new', courier, sans-serif; font-size: 12pt;">Server.java</span></strong>. Do not submit any other classes or documentation.</p>
+<p>The D2L/Brightspace Dropbox has been set up to allow you to submit updates to your assignment multiple times until the due date/time.</p>
+<p></p>
+</div>
+<div id="authors"><b>Prepared By: </b> © Mark Hatcher,&nbsp;<!--Mark Hatcher-->Department of Computer Science, MUN (BE220228)</div>
+</body></html>
